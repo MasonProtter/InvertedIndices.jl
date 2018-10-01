@@ -5,9 +5,7 @@ export InvertedIndex, Not
 """
     InvertedIndex(idx)
     Not(idx)
-
 Construct an inverted index, selecting all indices not in the passed `idx`.
-
 Upon indexing into an array, the `InvertedIndex` behaves like a 1-dimensional
 collection of the indices of the array that are not in `idx`. Bounds are
 checked to ensure that all indices in `idx` are within the bounds of the array
@@ -39,7 +37,7 @@ end
 NIdx{N} = Union{CartesianIndex{N}, AbstractArray{CartesianIndex{N}}, AbstractArray{Bool,N}}
 @inline spanned_indices(inds, I::Tuple{InvertedIndex{<:NIdx{0}},Vararg{Any}}) = ()
 @inline spanned_indices(inds, I::Tuple{InvertedIndex{<:NIdx{1}},Vararg{Any}}) = (Base.uncolon(inds, (:, Base.tail(I)...)).indices,)
-@inline function spanned_indices{N}(inds, I::Tuple{InvertedIndex{<:NIdx{N}},Vararg{Any}})
+@inline function spanned_indices(inds, I::Tuple{InvertedIndex{<:NIdx{N}},Vararg{Any}})::N where {N}
     heads, tails = Base.IteratorsMD.split(inds, Val{N})
     (Base.front(heads)..., Base.uncolon((heads[end], tails...), (:, Base.tail(I)...)).indices)
 end
